@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get access to resource</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../css/middleware.css">
+</head>
+<body>
+
+  <div class="wrapper">
+
+      <main class="main">
+        <div class="access-block">
+          <div class="access-block__top">
+            <div>
+              <a href="/"><img src="../img/logo.png" alt="logo" id="label-img"></a>
+            </div>
+          </div>
+          <div class="access-block__bottom">
+
+            <h2 class="access-block__header">Get access to resourse</h2>
+            {{!-- <p>You are not allowed to access this resource.</p> --}}
+            <h3 class="access-block__text"><i>&nbsp; &nbsp; &nbsp; &nbsp; You are not allowed to access this resource. 
+            To enter, please, enter the access key below.</i></h3>
+
+            <form action="/api/middleware/access-key-verification" method="post">
+              <label for="entry-key">Entry key:</label>
+              <input id="entry-key" type="text" name="entry-key" placeholder="key" minlength="8" maxlength="32" required><br>
+              <input  type="submit" value="Get Access" id="access-btn"><br>
+            </form>
+          </div>
+        </div>
+      </main>
+
+  </div>
+
+</body>
+</html>

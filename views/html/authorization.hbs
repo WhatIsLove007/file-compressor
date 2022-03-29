@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../css/authorization.css">
+  <link rel="stylesheet" href="../css/templates/header.css">
+  <link rel="stylesheet" href="../css/templates/footer.css">
+</head>
+<body>
+  <div class="wrapper">
+
+      <header class="header">
+        <div class="header__container">
+          <div class="header__header-left-side _inactive">
+            <a href="/" id="logo-shell"><img src="../img/logo.png" alt="logo" class="header__logo"></a>
+            <nav class="header__navigation-bar">
+              <a href="/tools/image-compression"><span class="navigation-bar__link">Compress image</span></a>
+              <a href="/about"><span class="navigation-bar__link">In developing...</span></a>
+            </nav>
+          </div>
+          <div class="header__header-right-side _inactive">
+            <div id="header-account-action">
+              <a href="/signin" id="header__signin">Sign In</a>|<a href="/signup" id="header__signup">Sign Up</a>
+            </div>
+            <img src="../img/menu-button.png" alt="Icons created by Freepik & ariefstudio - Flaticon" class="header__menu-icon">
+            <nav class="menu-icon__list">
+              <div id="header-account-action-narrow-screen">
+                <a href="/signin">Sign In</a> &nbsp; &nbsp; | &nbsp; &nbsp; <a href="/signup">Sign Up</a>
+              </div>
+              <a href="/tools/image-compression"><div>Compress image</div></a>
+              <a href="/about"><div>In developing...</div></a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <main class="main">
+        <div class="registration-block _disabled">
+          <div class="registration-block__top">
+            <div>
+              <a href="/"><img src="../img/logo.png" alt="logo" id="label-img"></a>
+            </div>
+          </div>
+          <div class="registration-block__bottom">
+
+            <h2>Authorization</h2><br><br>
+
+            <form action="/api/account/signin" method="post">
+              <label for="">E-mail:</label>
+              <input type="email" name="email" placeholder="e-mail" maxlength="40" required><br>
+              <label for="">Password:</label>
+              <input id="input" type="password" name="password" placeholder="password" minlength="4" maxlength="16" required><br>
+              <input  type="submit" value="Sign In" id="signin-btn"><br>
+            </form>
+            <div class="authorization-block__help-text">
+                <p><a href="/signin/password-reset">Forgot password? </a></p>
+                <p><a href="/signup">Sign Up</a></p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__container">
+          <span class="footer__footer-left-side">Support: <i class="footer__text-email"> filecompressorproject@gmail.com</i></span>
+
+          <span class="footer__footer-right-side">© 2022 File Compressor
+            <span class="footer__copyright-text">This site was created as a pet project by 
+              <a href="https://github.com/WhatIsLove007" target="_blank" class="footer__github-hyperlink">Vladislav</a>
+            </span>
+          </span>
+        </div>
+      </footer>
+
+  </div>
+
+
+  <script src="../js/script.js"></script>
+  <script src="../js/registrationBlock.js"></script>
+</body>
+</html>

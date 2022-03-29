@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My account</title>
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="stylesheet" href="../css/account.css">
+  <link rel="stylesheet" href="../css/templates/header.css">
+  <link rel="stylesheet" href="../css/templates/footer.css">
+</head>
+<body>
+  <div class="wrapper">
+
+      <header class="header">
+        <div class="header__container">
+          <div class="header__header-left-side _inactive">
+            <a href="/" id="logo-shell"><img src="../img/logo.png" alt="logo" class="header__logo"></a>
+            <nav class="header__navigation-bar">
+              <a href="/tools/image-compression"><span class="navigation-bar__link">Compress image</span></a>
+              <a href="/about"><span class="navigation-bar__link">In developing...</span></a>
+              {{!-- <a href=""><span class="navigation-bar__link">Function3</span></a> --}}
+            </nav>
+          </div>
+          <div class="header__header-right-side _inactive">
+            <div id="header-account-action">
+              <a href="/signin" id="header__signin">Sign In</a>|<a href="/signup" id="header__signup">Sign Up</a>
+            </div>
+            <img src="../img/menu-button.png" alt="Icons created by Freepik & ariefstudio - Flaticon" class="header__menu-icon">
+            <nav class="menu-icon__list">
+              <div id="header-account-action-narrow-screen">
+                <a href="/signin">Sign In</a> &nbsp; &nbsp; | &nbsp; &nbsp; <a href="/signup">Sign Up</a>
+              </div>
+              <a href="/tools/image-compression"><div>Compress image</div></a>
+              <a href="/about"><div>In developing...</div></a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+
+
+      <main class="main">
+        
+        <div class="account-block">
+          <div class="account-block__container">
+
+            <div class="account-header">
+              <div class="account-header__text">My account</div>
+            </div>
+            <div class="account-main">
+              <div class="account-main__card _disabled">
+                <div class="card__card-header"><h3>Email</h3><span></span></div>
+                <div class="card__card-main"><div><span class="bold-text">Your email:</span> &nbsp; <span id="email"></span></div></div>
+              </div>
+
+
+
+              <div class="account-main__card _disabled" id="change-password-card">
+                
+                <div class="card__change-password-first-page">
+                  <div class="card__card-header"><h3>Password</h3><span class="underlined-text" id="change">Change</span></div>
+                  <div class="card__card-main">The new password must be between 4 and 16 characters long.</div>
+                </div>
+
+                <div class="card__change-password-second-page change-password-card-second-page_disabled">
+                  <div class="card__card-header"><h3>Change password</h3><span id="close-change-password">X</span></div>
+                  <div class="card-main__change-password">
+                    <label for="old-password">Current password:</label>
+                    <input type="password" name="" id="old-password">
+                    <label for="new-password">New password:</label>
+                    <input type="password" name="" id="new-password">
+                    <div id="change-password-output"></div>
+                    <input type="submit" value="Change" id="send-change-password-btn">
+                  </div>
+                </div>
+
+              </div>
+
+
+
+              <div class="account-main__card _disabled">
+                <div class="card__card-header"><h3>Log Out</h3><span class="underlined-text" id="logout">Log Out</span></div>
+                <div class="card__card-main">You will be logged out on all devices.</div>
+              </div>
+              <div class="account-main__card _disabled">
+                <div class="card__card-header"><h3>Delete Account</h3><span class="underlined-text" id="delete">Delete</span></div>
+                <div class="card__card-main">You will delete all data from this resource by deleting this account.</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+
+
+
+      <footer class="footer">
+        <div class="footer__container">
+          <span class="footer__footer-left-side">Support: <i class="footer__text-email"> filecompressorproject@gmail.com</i></span>
+
+          <span class="footer__footer-right-side">© 2022 File Compressor
+            <span class="footer__copyright-text">This site was created as a pet project by 
+              <a href="https://github.com/WhatIsLove007" target="_blank" class="footer__github-hyperlink">Vladislav</a>
+            </span>
+          </span>
+        </div>
+      </footer>
+
+  </div>
+
+  </div>
+
+  <script src="../js/script.js"></script>
+  <script src="../js/accountPage.js"></script>
+</body>
+</html>

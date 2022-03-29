@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: rgb(255, 233, 195);
+    font-family: 'Alegreya', serif;
+}
+
+form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    height: 30px;
+    font-size: medium;
+    font-weight: 700;
+    border: 0px black solid;
+    border-radius: 5px;
+    padding: 0 10px;
+}
+input::placeholder {
+    font-size: 16px;
+    color: rgb(173, 173, 173);
+}
+.wrapper {
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+
+.main {
+    width: 100%;
+    padding: 40px 0 ;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+}
+.registration-block {
+    height: 600px;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: rgb(235, 235, 235);
+    font-size: 18px;
+    border: 1px gray solid;
+    border-radius: 20px;
+    transition: all 0.5s
+}
+.registration-block__top {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.registration-block__bottom {
+    width: 100%;
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
+#label-img {
+    height: 50px;
+}
+
+
+
+#password-icon {
+    width: 20px;
+    cursor: pointer;
+    position: relative;
+    top: -50px;
+    left: 380px;
+}
+
+
+
+
+#signin-btn {
+    cursor: pointer;
+    background-color: rgb(111, 214, 163);
+    transition: all 0.3s;
+}
+
+#signin-btn:hover {
+    background-color: rgb(0, 211, 105);
+}
+
+
+label {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+
+
+
+
+
+
+.authorization-block__help-text {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-items: center;
+}
+
+
+
+
+._disabled {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+
+
+
+
+
+
+@media (max-width: 600px) {
+    .authorization-block__help-text{
+        width: 85%;
+    }
+    .registration-block {
+        border-radius: 0;
+    }
+    form {
+        width: 85%;
+    }
+}
