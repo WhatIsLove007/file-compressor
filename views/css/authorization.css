@@ -20,7 +20,7 @@ input {
     height: 30px;
     font-size: medium;
     font-weight: 700;
-    border: 0px black solid;
+    border: 0px;
     border-radius: 5px;
     padding: 0 10px;
 }
@@ -92,16 +92,28 @@ input::placeholder {
 }
 
 
+#signin-email, #signin-password {
+    transition: box-shadow 0.2s;
+}
 
+
+.signin-error-message-output {
+    margin-bottom: 5px;
+    opacity: 0;
+    transition: all 0.6s;
+    display: flex;
+    align-items: center;
+}
+.signin-error-message-text {
+    margin-left: 10px;
+    font-weight: 700;
+    color: rgb(255, 66, 66);
+}
 
 #signin-btn {
     cursor: pointer;
     background-color: rgb(111, 214, 163);
     transition: all 0.3s;
-}
-
-#signin-btn:hover {
-    background-color: rgb(0, 211, 105);
 }
 
 
@@ -135,7 +147,9 @@ label {
 
 
 
-
+.bold-text {
+    font-weight: 900;
+}
 
 
 

@@ -30,7 +30,7 @@ apiRouter.get('/site-elements/account-page-data', apiController.sendAccountPageD
 
 apiRouter.delete('/account/logout', apiController.logout)
 
-apiRouter.post('/account/signin', urlEncodedParser, apiController.signin)
+apiRouter.post('/account/signin', jsonParser, apiController.signin)
 
 
 

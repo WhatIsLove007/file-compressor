@@ -118,7 +118,7 @@ exports.recoverPassword = (request, response) => {
 
 exports.signin = (request, response) => {
 
-   if (!request.body) return response.status(400).redirect('/')
+   if (!request.body) return response.sendStatus(400)
 
    const email = request.body.email
    const password = request.body.password
@@ -127,19 +127,27 @@ exports.signin = (request, response) => {
 
    User.findOne({email: email})
       .then(data => {
-         if (!data) throw null
+         if (!data) {
+            response.status(401).send({authenticatedEmail: false})
+            throw null 
+         }
          const isAuthenticated  = Password.compareHashSync(password, data.password)
-         if (!isAuthenticated) throw null
+         if (!isAuthenticated) {
+            response.status(401).send({authenticatedPassword: false})
+            throw null 
+         }
          return User.findOneAndUpdate({email: email}, {$set: {SESSION_ID: SESSION_ID}})
       })
-      .then(data => {
+      .then(() => {
          const cookies = new Cookies(request, response)
          cookies.set('SESSION_ID', SESSION_ID)
-         response.redirect('/')
+         response.sendStatus(200)
       })
       .catch(error => {
-         if (error) console.log()
-         response.status(400).redirect('/signin')
+         if (error) {
+            console.log(error)
+            response.sendStatus(500)
+         }
       })
 }
 
