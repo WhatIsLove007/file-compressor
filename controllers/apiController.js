@@ -14,34 +14,36 @@ const imageCompression = require('../models/business-logic/imageCompression')
 
 exports.createAccount = (request, response) => {
 
-   if (!request.body) return response.sendStatus(400)
+   if (!request.body) return response.status(400).send({badRequest: true})
 
    const email = request.body.email
    const password = Password.generateHashSync(request.body.password, 10)
+   const confirmationCode = token.generateToken(21)
 
    User.findOne({email: email})
       .then(result => {
-         if (result) return console.log('ERROR. This email exists...')  // to inform user in frontend that this account exist !!!
-         const confirmationCode = token.generateToken(21)
-         return Candidate.create({email: email, password: password, confirmationCode: confirmationCode})
+         if (result) {
+            response.status(401).send({emailExists: true})
+            throw null
+         }
+         return Candidate.findOneAndUpdate({email: email}, {$set: {password: password, confirmationCode: confirmationCode}})
       })
-      .then((data) => {
-         Email.sendConfirmationEmail(email, data.confirmationCode)
-         response.redirect('/signup/confirm')
+      .then(result => {
+         if (result === null) {
+            return Candidate.create({email: email, password: password, confirmationCode: confirmationCode})
+         }
+      })
+      .then(() => {
+         Email.sendConfirmationEmail(email, confirmationCode)
+         response.sendStatus(200)
 
       })
-      .catch(error => console.log(error))
-
-}
-
-
-exports.processConfirmationAccount = (request, response) => {
-
-   const confirmationCode = request.body.code
-
-   if (!confirmationCode) return response.sendStatus(400)
-
-   response.redirect(`/api/account/confirm-email/${confirmationCode}`)
+      .catch(error => {
+         if (error) {
+            console.log(error)
+            response.sendStatus(500)
+         }
+      })
 
 }
 
@@ -55,7 +57,10 @@ exports.confirmAccount = (request, response) => {
 
    Candidate.findOne({confirmationCode: confirmationCode})
       .then(result => {
-         if (!result) throw response.redirect('/signup/confirm')
+         if (!result) {
+            response.sendStatus(401)
+            throw null
+         }
          return User.create({_id: result._id, email: result.email, password: result.password})
       })
       .then(result => {
@@ -68,11 +73,13 @@ exports.confirmAccount = (request, response) => {
          return Candidate.findByIdAndDelete({_id: result._id})
       })
       .then((result) => {
-         // fs.mkdirSync(path.join(__dirname, '/../user-files', result.email))
          response.redirect('/')
       })
       .catch(error => {
-         if (error) console.log(error)
+         if (error) {
+            console.log(error)
+            response.sENDstatus(500)
+         }
       })
 }
 
@@ -118,7 +125,7 @@ exports.recoverPassword = (request, response) => {
 
 exports.signin = (request, response) => {
 
-   if (!request.body) return response.sendStatus(400)
+   if (!request.body) return response.status(400).send({badRequest: true})
 
    const email = request.body.email
    const password = request.body.password
@@ -290,9 +297,9 @@ exports.compressImage = (request, response) => {
 }
 
 exports.verifyAccessKey = (request, response) => {
-
+   
    const entryKey = request.body['entry-key']
-   const key1 = 'GermanLovesUkraine'
+   const key1 = 'Xt4rZMBvEoW9W2mW'
    const key2 = 'russianWarshipGoFuckYourself'
 
    if (!entryKey) return response.sendStatus(400)
@@ -300,10 +307,10 @@ exports.verifyAccessKey = (request, response) => {
    if (entryKey === key1 || entryKey === key2) {
       const cookies = new Cookies(request, response)
       cookies.set('SESSION_GUEST_ID', 'YGHkCsAQIBH0F5cS')
-      return response.redirect('/')
+      return response.sendStatus(200)
    }
    
-   return response.status(400).redirect('/')
+   return response.sendStatus(401)
 }
 
 

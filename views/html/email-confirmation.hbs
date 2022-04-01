@@ -39,22 +39,29 @@
       </header>
 
       <main class="main">
-        <div class="registration-block _disabled">
-          <div class="registration-block__top">
+        <div class="email-confirmation-block _disabled">
+          <div class="email-confirmation-block__top">
             <div>
               <a href="/"><img src="../img/logo.png" alt="logo" id="label-img"></a>
             </div>
           </div>
-          <div class="registration-block__bottom">
+          <div class="email-confirmation-block__bottom">
 
             <h2>Email confirmation</h2><br>
-            <h3 class="registration-block__text"><i>&nbsp; &nbsp; &nbsp; &nbsp; We just sent you a message via email with your confirmation code. 
+            <h3 class="email-confirmation-block__text"><i>&nbsp; &nbsp; &nbsp; &nbsp; We just sent you a message via email with your confirmation code. 
               Please check your inbox, and if you can’t find it, check your spam folder to make sure it didn't end up there. Enter the code in the form below to verify your identity.</i></h3><br>
-            <form action="/api/account/confirmation-code-proccesing" method="post">
+            <div class="email-conformation__block">
               <label for="">Confirmation code:</label>
-              <input id="input" type="text" name="code" placeholder="code" minlength="28" maxlength="28" required><br>
-              <input  type="submit" value="Send" id="signup-btn"><br>
-            </form>
+              <input id="confirmation-code" type="text" name="code" placeholder="code"><br>
+              <div class="error-message-output">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                  <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                </svg>
+                <p class="error-message-text"></p>
+              </div>
+              <input  type="button" value="Send" id="email-conformation-btn"><br>
+            </div>
             <p>Already have an account? <a href="/signin">Sign In</a></p>
           </div>
         </div>
@@ -75,6 +82,6 @@
   </div>
 
   <script src="../js/script.js"></script>
-  <script src="../js/registrationBlock.js"></script>
+  <script src="../js/dataEntryBlock.js"></script>
 </body>
 </html>

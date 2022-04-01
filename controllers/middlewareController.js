@@ -10,6 +10,7 @@ module.exports.middleware = (request, response, next) => {
       if (SESSION_GUEST_ID === 'YGHkCsAQIBH0F5cS') {
          return next()
       }
+      cookies.set('SESSION_GUEST_ID')
    }
 
    if (request._parsedUrl.pathname === '/api/middleware/access-key-verification') return next()

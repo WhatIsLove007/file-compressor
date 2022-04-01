@@ -6,11 +6,9 @@ const apiController = require('../controllers/apiController')
 const multerSettings = require('../models/business-logic/multerSettings')
 
                                        // CREATE DOCUMENTATION WHERE YOU EXPLAIN AND DESCRIBE ABOUT YOUR API AND API ROUTES
-apiRouter.post('/account/create', urlEncodedParser, apiController.createAccount)
+apiRouter.post('/account/create', jsonParser, apiController.createAccount)
 
-apiRouter.post('/account/confirmation-code-proccesing', urlEncodedParser, apiController.processConfirmationAccount)
-
-apiRouter.get('/account/confirm-email/:token', apiController.confirmAccount)  // refactor it on /account/confirm ... etc...
+apiRouter.get('/account/confirm-email/:token', apiController.confirmAccount)
 
 apiRouter.post('/account/send-password-recovery-code', urlEncodedParser, apiController.sendPasswordRecoveryCode)
 
@@ -22,7 +20,7 @@ apiRouter.put('/account/change-password', jsonParser, apiController.changePasswo
 
 apiRouter.post('/tools/compress-image', multerSettings, apiController.compressImage)
 
-apiRouter.post('/middleware/access-key-verification', urlEncodedParser, apiController.verifyAccessKey)
+apiRouter.post('/middleware/access-key-verification', jsonParser, apiController.verifyAccessKey)
 
 apiRouter.get('/site-elements/header-data', apiController.sendHeaderData)
 

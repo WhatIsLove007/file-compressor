@@ -57,6 +57,7 @@ body {
 .about-block__header {
     font-size: 30px;
     font-weight: 700;
+    margin-bottom: 20px;
 }
 
 .about-block__main {
@@ -68,7 +69,17 @@ body {
     justify-content: space-around;
 }
 
+.about-block p {
+    margin-top: 10px;
+    text-indent: 30px;
+}
 
+.about-block ul {
+    list-style: none;
+}
+.about-block li {
+    margin-top: 5px;
+}
 
 
 @media (max-width: 767px) {
