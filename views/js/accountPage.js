@@ -65,40 +65,48 @@ const sendChangePasswordBtn = document.querySelector('#send-change-password-btn'
 
 if (oldPasswordInput && newPasswordInput && sendChangePasswordBtn) {
 
+   window.addEventListener('keyup', event => {
+      if (event.code === 'Enter') {
+         event.preventDefault()
+         if (!document.querySelector('.change-password-card-second-page_disabled')) {
+            sendChangePasswordBtn.click()
+         }  
+      }
+   })
+
    sendChangePasswordBtn.addEventListener('click', () => {
 
-      if (oldPasswordInput.value.length < 4 || oldPasswordInput.value.length > 16
-         || newPasswordInput.value.length < 4 || newPasswordInput.value.length > 16) {
+      const oldPassword = oldPasswordInput.value
+      const newPassword = newPasswordInput.value
 
-         changePasswordOutput.style.color = '#ce0e0e'
-         changePasswordOutput.innerHTML = 'Incorrect password length'
-
+      if (oldPassword.length < 4 || oldPassword.length > 16) {
+         showChangePasswordMessage('Incorrect password length', true, oldPasswordInput)
+      } else if (newPassword.length < 4 || newPassword.length > 16) {
+         showChangePasswordMessage('Incorrect password length', true, newPasswordInput)
+      } else if (oldPassword.match(/[^Aa-z-Z0-9_]/)) {
+         showChangePasswordMessage('Only a-z, A-Z, digits and underscore', true, oldPasswordInput)
+      } else if (newPassword.match(/[^Aa-z-Z0-9_]/)) {
+         showChangePasswordMessage('Only a-z, A-Z, digits and underscore', true, newPasswordInput)
+      } else if (newPassword === oldPassword) {
+         showChangePasswordMessage('Passwords are identical', true, newPasswordInput)
       } else {
-
          fetch('/api/account/change-password', {
             method: 'PUT',
             headers: { "Accept": "application/json", "Content-Type": "application/json" },
             body: JSON.stringify({
-               oldPassword: oldPasswordInput.value,
-               newPassword: newPasswordInput.value,
+               oldPassword: oldPassword,
+               newPassword: newPassword,
             })
          })
             .then(response => {
+               const changePasswordBlock = document.querySelector('#change-password-card')
                if (response.ok === true) {
-
-                  changePasswordOutput.style.color = '#077a07'
-                  changePasswordOutput.innerHTML = 'The password has been changed!'
-                  oldPasswordInput.value = ''
-                  newPasswordInput.value = ''
-         
+                  showChangePasswordMessage('The password has been changed!', false, changePasswordBlock)
                } else {
                   if (response.status === 403) {
-                     changePasswordOutput.style.color = '#ce0e0e'
-                     changePasswordOutput.innerHTML = 'Incorrect current password'         
-   
+                     showChangePasswordMessage('Wrong current password', true, oldPasswordInput)
                   } else {
-                     changePasswordOutput.style.color = '#ce0e0e'
-                     changePasswordOutput.innerHTML = 'Server error'            
+                     showChangePasswordMessage('Server error', true, changePasswordBlock)
                   }
                }
 
@@ -110,8 +118,30 @@ if (oldPasswordInput && newPasswordInput && sendChangePasswordBtn) {
 
 }
 
+function showChangePasswordMessage(textMessage, error = true, animatedElement) {
 
+   animatedElement.style.transition = 'all 0.8s'
 
+   if (error === true) {
+      changePasswordOutput.style.color = '#ce0e0e'
+      changePasswordOutput.innerHTML = textMessage
+      animatedElement.focus()
+      animatedElement.style.boxShadow = 'inset 0 0 15px -4px #ff0000'   
+   }
+
+   if (error === false) {
+      changePasswordOutput.style.color = '#077a07'
+      changePasswordOutput.innerHTML = textMessage
+      oldPasswordInput.value = ''
+      newPasswordInput.value = ''
+      animatedElement.style.boxShadow = 'inset 0 0 15px -4px #008000'   
+   }
+
+   setTimeout(() => {
+      animatedElement.style.boxShadow = ''
+   }, 800);
+
+}
 
 
 

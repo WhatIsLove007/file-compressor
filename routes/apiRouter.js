@@ -10,9 +10,9 @@ apiRouter.post('/account/create', jsonParser, apiController.createAccount)
 
 apiRouter.get('/account/confirm-email/:token', apiController.confirmAccount)
 
-apiRouter.post('/account/send-password-recovery-code', urlEncodedParser, apiController.sendPasswordRecoveryCode)
+apiRouter.post('/account/send-password-recovery-code', jsonParser, apiController.sendPasswordRecoveryCode)
 
-apiRouter.post('/account/password/recover', urlEncodedParser, apiController.recoverPassword)
+apiRouter.post('/account/password/recover', jsonParser, apiController.recoverPassword)
 
 apiRouter.delete('/account/delete', apiController.deleteAccount)
 

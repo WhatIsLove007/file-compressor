@@ -93,7 +93,7 @@ input::placeholder {
 
 
 .error-message-output {
-    margin-bottom: 5px;
+    margin: 7px 0;
     opacity: 0;
     transition: all 0.6s;
     display: flex;
@@ -102,7 +102,7 @@ input::placeholder {
 .error-message-text {
     margin-left: 10px;
     font-weight: 700;
-    color: rgb(255, 66, 66);
+    color: rgb(248, 57, 57);
 }
 
 #signin-btn {

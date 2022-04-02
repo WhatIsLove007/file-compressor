@@ -91,35 +91,51 @@ exports.sendPasswordRecoveryCode = (request, response) => {
 
    User.findOne({email: email})
    .then(result => {
-      if (!result) throw response.redirect('/signin/password-reset')
-      const recoveryCode = token.generateToken(30)
+      if (!result) {
+         response.status(401).send({isRegistered: false})
+         throw null
+      }
+      const recoveryCode = token.generateToken(21)
       Email.sendRecoveryPassword(result.email, recoveryCode)
       return User.findOneAndUpdate({'_id': result['_id']}, {$set: {passwordRecoveryCode: recoveryCode}})
    })
    .then(() => {
-      response.redirect('/signin/password-restore')
+      response.sendStatus(200)
    })
-   .catch(error => console.log(error))
+   .catch(error => {
+      if (error) {
+         console.log(error)
+         response.sendStatus(500)
+      }
+   })
 }
 
 exports.recoverPassword = (request, response) => {
-   if (!request.body) return response.redirect('/signin/password-restore')
+
+   if (!request.body.code || !request.body.password) return response.sendStatus(400)
+
    const code = request.body.code
-   const newPassword = Password.generateHashSync(request.body.password, 10)       // AFTER ALL REFACTOR IT TO ASYNC PROMISE AND THIS OPERATION ABOVE
+   const newPassword = Password.generateHashSync(request.body.password, 10) // u can refactor it in async
    const cookies = new Cookies(request, response)
    const SESSION_ID = token.generateToken(16)
 
    User.findOneAndUpdate({passwordRecoveryCode: code}, {$set: {password: newPassword, SESSION_ID: SESSION_ID}})
       .then(result => {
-         if (!result) throw response.redirect('/signin/password-restore')
+         if (!result) {
+            response.status(401).send({isAuthenticated: false})
+            throw null
+         }
          cookies.set('SESSION_ID', SESSION_ID)
          return User.updateOne({'_id': result['id']}, {$unset: {passwordRecoveryCode: 1}})
       })
       .then(() => {
-         response.redirect('/')
+         response.sendStatus(200)
       })
       .catch(error => {
-         if (error) console.log(error)
+         if (error) {
+            console.log(error)
+            response.sendStatus(500)
+         }
       })
 }
 
@@ -314,8 +330,6 @@ exports.verifyAccessKey = (request, response) => {
 }
 
 
-
-// ================================= AJAX =================================
 module.exports.sendHeaderData = (request, response) => {
 
    const cookies = new Cookies(request, response)
@@ -347,4 +361,3 @@ module.exports.sendAccountPageData = (request, response) => {
          response.sendStatus(401)
       })
 }
-// ================================ /AJAX =================================

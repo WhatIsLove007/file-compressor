@@ -19,18 +19,18 @@ const userSchema = new Schema({
    password: {
       type: String,
       required: true,
-      minlength: 60,    //
-      maxlength: 60,   // LOOK WHAT IS FIXING LENGTH OF HASH !!!!!!!!!!!
+      minlength: 60,
+      maxlength: 60,
    },
    SESSION_ID: {
       type: String,
-      minlength: 10,
+      minlength: 16,
       maxlength: 50,
    },
    passwordRecoveryCode: {
       type: String,
-      minlength: 38,
-      maxlength: 42,
+      minlength: 28,
+      maxlength: 28,
    }
 }, {versionKey: false})
 

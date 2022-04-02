@@ -26,7 +26,9 @@ if (window.location.pathname === '/signup') {
             signupBtn.style.backgroundColor = 'rgb(111, 214, 163)'
          }, 300);
 
-         if (validateData(signupEmailInput, signupPasswordInput) === false) return null
+         if (validateEmail(signupEmailInput) === false) return null
+
+         if (validatePassword(signupPasswordInput) === false) return null
 
          const email = signupEmailInput.value.toLowerCase()
          const password = signupPasswordInput.value
@@ -91,7 +93,9 @@ if (window.location.pathname === '/signin') {
             signinBtn.style.backgroundColor = 'rgb(111, 214, 163)'
          }, 300);
 
-         if (validateData(signinEmailInput, signinPasswordInput) === false) return null
+         if (validateEmail(signinEmailInput) === false) return null
+
+         if (validatePassword(signinPasswordInput) === false) return null
 
          const email = signinEmailInput.value.toLowerCase()
          const password = signinPasswordInput.value
@@ -129,7 +133,158 @@ if (window.location.pathname === '/signin') {
    }
 }
 
-// ---------------------------------------================----------------------------------------------------------
+
+if (window.location.pathname === '/signin/password-reset') {
+
+   const passwordResetBlock = document.querySelector('.password-reset-block')
+   const emailInput = document.querySelector('#password-reset-email')
+   const sendBtn = document.querySelector('#send-btn')
+
+
+   if (passwordResetBlock) {
+      animateBlockElement(passwordResetBlock)
+   }
+
+
+   if (emailInput && sendBtn) {
+
+
+      animateSubmitButton(sendBtn)
+
+      sendBtn.addEventListener('click', () => {
+
+         sendBtn.style.backgroundColor = 'rgb(1, 185, 93)'
+         setTimeout(() => {
+            sendBtn.style.backgroundColor = 'rgb(111, 214, 163)'
+         }, 300);
+         
+         if (validateEmail(emailInput) === false) return null 
+
+         const email = emailInput.value.toLowerCase()
+         fetch('/api/account/send-password-recovery-code', {
+            method: 'POST',
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({
+               email: email,
+            })
+         })
+            .then(response => {
+               if (response.ok === true) {
+                  window.location.replace('/signin/password-restore')
+                  throw null
+               }
+               if (response.status === 500) {
+                  showErrorMessage('Server error', emailInput)
+                  throw null
+               }
+               if (response.status === 400) {
+                  showErrorMessage('Something went wrong, please try again', emailInput)
+                  throw null
+               }
+               if (response.status === 401) {
+                  return response.json()
+               }
+               showErrorMessage('Something went wrong, please try again', emailInput)
+               throw null
+            })
+            .then(response => {
+               if (response.isRegistered === false) {
+                  showErrorMessage('This email is not registered', emailInput)
+               }
+            })
+            .catch(error => {
+               if (error) {
+                  console.log(error)
+                  showErrorMessage('Something went wrong, please try again', emailInput)
+               }
+            })
+   
+      })
+
+   }
+
+
+}
+
+
+if (window.location.pathname === '/signin/password-restore') {
+
+   const passwordRestoreBlock = document.querySelector('.password-restore-block')
+   const codeInput = document.querySelector('#password-restore-code')
+   const passwordInput = document.querySelector('#password-restore-password')
+   const restoreBtn = document.querySelector('#restore-btn')
+
+
+   if (passwordRestoreBlock) {
+      animateBlockElement(passwordRestoreBlock)
+   }
+
+
+   if (codeInput && passwordInput && restoreBtn) {
+
+
+      animateSubmitButton(restoreBtn)
+
+      restoreBtn.addEventListener('click', () => {
+
+         restoreBtn.style.backgroundColor = 'rgb(1, 185, 93)'
+         setTimeout(() => {
+            restoreBtn.style.backgroundColor = 'rgb(111, 214, 163)'
+         }, 300);
+         
+         if (validateConfirmationCode(codeInput) === false) return null 
+
+         if (validatePassword(passwordInput) === false) return null 
+
+         const code = codeInput.value
+         const password = passwordInput.value
+
+         fetch('/api/account/password/recover', {
+            method: 'POST',
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({
+               code: code,
+               password: password,
+            })
+         })
+            .then(response => {
+               if (response.ok === true) {
+                  window.location.replace('/')
+                  throw null
+               }
+               if (response.status === 500) {
+                  showErrorMessage('Server error', codeInput)
+                  throw null
+               }
+               if (response.status === 400) {
+                  showErrorMessage('Something went wrong, please try again', codeInput)
+                  throw null
+               }
+               if (response.status === 401) {
+                  return response.json()
+               }
+               showErrorMessage('Something went wrong, please try again', codeInput)
+               throw null
+            })
+            .then(response => {
+               if (response.isAuthenticated === false) {
+                  showErrorMessage('Wrong recovery code', codeInput)
+               }
+            })
+            .catch(error => {
+               if (error) {
+                  console.log(error)
+                  showErrorMessage('Something went wrong, please try again', emailInput)
+               }
+            })
+   
+      })
+
+   }
+
+
+}
+
 
 if (window.location.pathname === '/signup/confirm') {
 
@@ -180,7 +335,6 @@ if (window.location.pathname === '/signup/confirm') {
 
 }
 
-// -----------------------------------------------------------------------------------------------------------
 
 if (document.querySelector('title').innerHTML === 'Get access to resource') {
 
@@ -199,7 +353,7 @@ if (document.querySelector('title').innerHTML === 'Get access to resource') {
    getAccessBtn.addEventListener('click', () => {
 
       
-      if ( validateEntryKey(entryKeyInput) === false ) return null
+      if (validateEntryKey(entryKeyInput) === false) return null
 
       fetch('/api/middleware/access-key-verification', {
          method: 'POST',
@@ -220,7 +374,6 @@ if (document.querySelector('title').innerHTML === 'Get access to resource') {
 
    })
 }
-
 
 
 
@@ -255,16 +408,12 @@ function animateSubmitButton(button) {
 }
 
 
-function validateData(emailInput, passwordInput) {
+function validateEmail(emailInput) {
 
    const email = emailInput.value.toLowerCase()
-   const password = passwordInput.value
 
    if (email.length < 3 || email.length > 40) {
       return showErrorMessage('Email length must be between 3 and 40 characters', emailInput)
-   }
-   if (password.length < 4 || password.length > 16) {
-      return showErrorMessage('Password length must be between 4 and 16 characters', passwordInput)
    }
 
    if ( !(/@/.test(email)) ) {
@@ -302,15 +451,29 @@ function validateData(emailInput, passwordInput) {
       )
    }
 
-   if (password.match(/[^a-zA-Z0-9_]/)) {
-      return showErrorMessage('Password must contain only a-z, A-Z, digits and underscore', passwordInput)
-   }
-
    if (email.match(/[^a-zA-Z0-9.@-]/)) {
       return showErrorMessage('Allowed characters only a-z, digits, dot, dash and at sign', emailInput)
    }
 
    return true
+
+}
+
+
+function validatePassword(passwordInput) {
+
+   const password = passwordInput.value
+
+   if (password.length < 4 || password.length > 16) {
+      return showErrorMessage('Password length must be between 4 and 16 characters', passwordInput)
+   }
+
+   if (password.match(/[^a-zA-Z0-9_]/)) {
+      return showErrorMessage('Password must contain only a-z, A-Z, digits and underscore', passwordInput)
+   }
+
+   return true
+
 }
 
 
@@ -329,19 +492,20 @@ function validateEntryKey(keyInput) {
    return true
 }
 
+
 function validateConfirmationCode(input) {
 
    const code = input.value
 
    if ( !(/^.{28}$/.test(code)) ) return showErrorMessage('Code length must be 28 characters', input)
 
-   // ------CODE LENGTH MUST BE BETWEEN 28 AND 28
-   // Contains: uppercase  lowercase  digits  _  -
-
-   if (code.match(/[^a-zA-Z0-9_-]/)) return showErrorMessage('Code must contain only a-z, A-Z, digits, underscore and dash', input)
+   if (code.match(/[^a-zA-Z0-9_-]/)) {
+      return showErrorMessage('Code must contain only a-z, A-Z, digits, underscore and dash', input)
+   }
 
    return true
 }
+
 
 function showErrorMessage(message, input) {
 
