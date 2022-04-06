@@ -3,6 +3,7 @@ const app = express()
 const mongoose = require('mongoose')
 const path = require('path')
 const PORT = process.env.PORT || 3000
+const dotenv = require('dotenv').config()
 
 const homeRouter = require('./routes/homeRouter')
 const apiRouter = require('./routes/apiRouter')
@@ -26,8 +27,7 @@ app.use('/api', apiRouter)
 
 
 
-
-mongoose.connect('mongodb+srv://VladAdmin:54dz02rCyzBkAJgN@cluster0.ex92g.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+mongoose.connect(`mongodb+srv://VladAdmin:${process.env['MONGODB_PASSWORD']}@cluster0.ex92g.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, {
    useUnifiedTopology: true,
    useNewUrlParser: true })
    .then(() => app.listen(PORT, () => console.log(`Server has been started on PORT ${PORT}...`)))

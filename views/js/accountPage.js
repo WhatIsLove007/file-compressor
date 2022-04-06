@@ -44,19 +44,6 @@ function scrollChangePasswordCard() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 const oldPasswordInput = document.querySelector('#old-password')
 const newPasswordInput = document.querySelector('#new-password')
 const changePasswordOutput = document.querySelector('#change-password-output')
@@ -145,24 +132,6 @@ function showChangePasswordMessage(textMessage, error = true, animatedElement) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 async function getAccountPageData() {
    const response = await fetch('/api/site-elements/account-page-data', {
       method: "GET",
@@ -189,7 +158,7 @@ if (deleteButton) {
 }
 
 async function deleteAccount() {
-   const response = await fetch('/api/account/delete', {
+   const response = await fetch('/api/account', {
       method: "DELETE",
       headers: { "Accept": "application/json" }
   })

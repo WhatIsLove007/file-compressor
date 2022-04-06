@@ -4,7 +4,7 @@ const transporter = nodemailer.createTransport({
    service: 'gmail',
    auth: {
       user: 'filecompressorproject@gmail.com',
-      pass: 'UDGkO2mNNc4m5gXw',
+      pass: process.env['EMAIL_PASSWORD'],
    }
 })
 

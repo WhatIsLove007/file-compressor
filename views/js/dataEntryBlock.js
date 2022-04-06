@@ -33,7 +33,7 @@ if (window.location.pathname === '/signup') {
          const email = signupEmailInput.value.toLowerCase()
          const password = signupPasswordInput.value
    
-         fetch('/api/account/create', {
+         fetch('/api/account', {
             method: 'POST',
             headers: { "Accept": "application/json", "Content-Type": "application/json" },
             body: JSON.stringify({

@@ -196,10 +196,10 @@ exports.logout = (request, response) => {
 }
 
 
-exports.deleteAccount = (request, response) => {  // !!!!!!!!!!! NOT POST USE DELETE | ADD FUNCTION TO CHANGE PASSWORD
+exports.deleteAccount = (request, response) => {
 
    const cookies = new Cookies(request, response)
-   const userSessionId = cookies.get('SESSION_ID')  // and after all delete cookie in user browser
+   const userSessionId = cookies.get('SESSION_ID')
 
    if (!userSessionId) return response.sendStatus(401)
 
@@ -223,7 +223,7 @@ exports.deleteAccount = (request, response) => {  // !!!!!!!!!!! NOT POST USE DE
 }
 
 
-exports.changePassword = (request, response) => {  // We get old password compare it with pass DB and we get new pass
+exports.changePassword = (request, response) => {
 
    const oldPassword = request.body.oldPassword
    const newPassword = request.body.newPassword
