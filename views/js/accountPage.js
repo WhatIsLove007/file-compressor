@@ -65,6 +65,7 @@ if (oldPasswordInput && newPasswordInput && sendChangePasswordBtn) {
 
       const oldPassword = oldPasswordInput.value
       const newPassword = newPasswordInput.value
+      const changePasswordBlock = document.querySelector('#change-password-card')
 
       if (oldPassword.length < 4 || oldPassword.length > 16) {
          showChangePasswordMessage('Incorrect password length', true, oldPasswordInput)
@@ -86,17 +87,45 @@ if (oldPasswordInput && newPasswordInput && sendChangePasswordBtn) {
             })
          })
             .then(response => {
-               const changePasswordBlock = document.querySelector('#change-password-card')
                if (response.ok === true) {
                   showChangePasswordMessage('The password has been changed!', false, changePasswordBlock)
-               } else {
-                  if (response.status === 403) {
-                     showChangePasswordMessage('Wrong current password', true, oldPasswordInput)
-                  } else {
-                     showChangePasswordMessage('Server error', true, changePasswordBlock)
-                  }
+                  throw null
                }
-
+               return response.json()
+            })
+            .then(response => {
+               switch (response.message) {
+                  case 'No data body received':
+                     showChangePasswordMessage('Email was not sent, try again', true, changePasswordBlock)
+                     break
+                  case 'Incorrect current password length':
+                     showChangePasswordMessage(response.message, true, oldPasswordInput)
+                     break
+                  case 'Incorrect current password syntax':
+                     showChangePasswordMessage(response.message, true, oldPasswordInput)
+                     break
+                  case 'Incorrect new password length':
+                     showChangePasswordMessage(response.message, true, newPasswordInput)
+                     break
+                  case 'Incorrect new password syntax':
+                     showChangePasswordMessage(response.message, true, newPasswordInput)
+                     break
+                  case 'User is unauthorized':
+                     window.location.replace('/')
+                     break
+                  case 'Wrong current password':
+                     showChangePasswordMessage(response.message, true, oldPasswordInput)
+                     break
+                  case 'Server error':
+                     showChangePasswordMessage(response.message, true, changePasswordBlock)
+                     break
+                  default:
+                     showChangePasswordMessage('Something went wrong, try again', true, changePasswordBlock)
+                     break
+               }
+            })
+            .catch(error => {
+               if (error) console.log(error)
             })
 
       }
@@ -144,6 +173,8 @@ async function getAccountPageData() {
       if (emailElement) {
          emailElement.innerHTML = accountData.email
       }
+  } else {
+     window.location.replace('/')
   }
 }
 getAccountPageData()

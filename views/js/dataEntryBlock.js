@@ -46,14 +46,31 @@ if (window.location.pathname === '/signup') {
                return response.json()
             })
             .then(response => {
-               if (response.emailExists === true) {
-                  showErrorMessage('This email already exists', signupEmailInput)
-               }  else if (response.badRequest === true) {
-                  showErrorMessage('Client error', signupEmailInput)
-               }  else {
-                  showErrorMessage('Server error', signupPasswordInput)
+
+               switch (response.message) {
+                  case 'No data body received':
+                     showErrorMessage('Data was not sent, try again', signupEmailInput)
+                     break
+                  case 'Incorrect email':
+                     showErrorMessage(response.message, signupEmailInput)
+                     break
+                  case 'Incorrect password length':
+                     showErrorMessage(response.message, signupPasswordInput)
+                     break
+                  case 'Incorrect password syntax':
+                     showErrorMessage(response.message, signupPasswordInput)
+                     break
+                  case 'Email already exists':
+                     showErrorMessage(response.message, signupEmailInput)
+                     break
+                  case 'Server error':
+                     showErrorMessage(response.message, signupEmailInput)
+                     break
+                  default:
+                     showErrorMessage('Something went wrong, try again', signupEmailInput)
+                     break
                }
-               
+
             })
             .catch(error => {
                if (error) console.log(error)
@@ -109,18 +126,38 @@ if (window.location.pathname === '/signin') {
             })
          })
             .then(response => {
-               if (response.ok === true) throw window.location.replace('/')
-               else return response.json()
+               if (response.ok === true) {
+                  window.location.replace('/')
+                  throw null
+               }
+               return response.json()
             })
             .then(response => {
-               if (response.authenticatedEmail === false) {
-                  showErrorMessage('This email is not registered', signinEmailInput)
-               }  else if (response.authenticatedPassword === false) {
-                  return showErrorMessage('Wrong password', signinPasswordInput)
-               }  else if (response.badRequest === true) {
-                  showErrorMessage('Client error', signinEmailInput)
-               }  else {
-                  showErrorMessage('Server error', signinPasswordInput)
+               switch (response.message) {
+                  case 'No data body received':
+                     showErrorMessage('Data was not sent, please try again', signinEmailInput)
+                     break
+                  case 'Incorrect email':
+                     showErrorMessage(response.message, signinEmailInput)
+                     break
+                  case 'Incorrect password length':
+                     showErrorMessage(response.message, signinPasswordInput)
+                     break
+                  case 'Incorrect password syntax':
+                     showErrorMessage(response.message, signinPasswordInput)
+                     break
+                  case 'Email does not exist':
+                     showErrorMessage(response.message, signinEmailInput)
+                     break
+                  case 'Wrong password':
+                     showErrorMessage(response.message, signinPasswordInput)
+                     break
+                  case 'Server error':
+                     showErrorMessage(response.message, signinEmailInput)
+                     break
+                  default:
+                     showErrorMessage('Something went wrong, try again', signinEmailInput)
+                     break
                }
                
             })
@@ -173,24 +210,28 @@ if (window.location.pathname === '/signin/password-reset') {
                   window.location.replace('/signin/password-restore')
                   throw null
                }
-               if (response.status === 500) {
-                  showErrorMessage('Server error', emailInput)
-                  throw null
-               }
-               if (response.status === 400) {
-                  showErrorMessage('Something went wrong, please try again', emailInput)
-                  throw null
-               }
-               if (response.status === 401) {
-                  return response.json()
-               }
-               showErrorMessage('Something went wrong, please try again', emailInput)
-               throw null
+               return response.json()
             })
             .then(response => {
-               if (response.isRegistered === false) {
-                  showErrorMessage('This email is not registered', emailInput)
+
+               switch (response.message) {
+                  case 'No data body received':
+                     showErrorMessage('Email was not sent, try again', emailInput)
+                     break
+                  case 'Incorrect email':
+                     showErrorMessage(response.message, emailInput)
+                     break
+                  case 'Email does not exist':
+                     showErrorMessage(response.message, emailInput)
+                     break
+                  case 'Server error':
+                     showErrorMessage(response.message, emailInput)
+                     break
+                  default:
+                     showErrorMessage('Something went wrong, try again', emailInput)
+                     break
                }
+
             })
             .catch(error => {
                if (error) {
@@ -252,29 +293,42 @@ if (window.location.pathname === '/signin/password-restore') {
                   window.location.replace('/')
                   throw null
                }
-               if (response.status === 500) {
-                  showErrorMessage('Server error', codeInput)
-                  throw null
-               }
-               if (response.status === 400) {
-                  showErrorMessage('Something went wrong, please try again', codeInput)
-                  throw null
-               }
-               if (response.status === 401) {
-                  return response.json()
-               }
-               showErrorMessage('Something went wrong, please try again', codeInput)
-               throw null
+
+               return response.json()
+               
             })
             .then(response => {
-               if (response.isAuthenticated === false) {
-                  showErrorMessage('Wrong recovery code', codeInput)
+               switch (response.message) {
+                  case 'No data body received':
+                     showErrorMessage('Data was not sent, try again', codeInput)
+                     break
+                  case 'Incorrect code length':
+                     showErrorMessage(response.message, codeInput)
+                     break
+                  case 'Incorrect code syntax':
+                     showErrorMessage(response.message, codeInput)
+                     break
+                  case 'Incorrect password length':
+                     showErrorMessage(response.message, passwordInput)
+                     break
+                  case 'Incorrect password syntax':
+                     showErrorMessage(response.message, passwordInput)
+                     break
+                  case 'Wrong recovery code':
+                     showErrorMessage(response.message, codeInput)
+                     break
+                  case 'Server error':
+                     showErrorMessage(response.message, codeInput)
+                     break
+                  default:
+                     showErrorMessage('Something went wrong, please try again', codeInput)
+                     break
                }
             })
             .catch(error => {
                if (error) {
                   console.log(error)
-                  showErrorMessage('Something went wrong, please try again', emailInput)
+                  showErrorMessage('Something went wrong, please try again', codeInput)
                }
             })
    
@@ -321,7 +375,26 @@ if (window.location.pathname === '/signup/confirm') {
                   window.location.replace(`/`)
                   throw null
                }
-               else showErrorMessage('Wrong confirmation code', confirmationCodeInput)
+               return response.json()
+            })
+            .then(response => {
+               switch (response.message) {
+                  case 'No code received':
+                     showErrorMessage('The code was not sent, try again', confirmationCodeInput)
+                     break
+                  case 'Incorrect code length':
+                     showErrorMessage(response.message, confirmationCodeInput)
+                     break
+                  case 'Incorrect code syntax':
+                     showErrorMessage(response.message, confirmationCodeInput)
+                     break
+                  case 'Wrong confirmation code':
+                     showErrorMessage(response.message, confirmationCodeInput)
+                     break
+                  default:
+                     showErrorMessage('Something went wrong, try again', confirmationCodeInput)
+                     break
+               }
             })
             .catch(error => {
                if (error) console.log(error)
