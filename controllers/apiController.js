@@ -1,7 +1,6 @@
 const crypto = require('crypto')
 const Cookies = require('cookies')
 const multer = require('multer')
-const validator = require('validator')
 const fs = require('fs')
 const path = require('path')
 
@@ -11,21 +10,18 @@ const Email = require('../models/business-logic/email')
 const token = require('../models/business-logic/token')
 const Password = require('../models/business-logic/password')
 const imageCompression = require('../models/business-logic/imageCompression')
+const entryDataValidation = require('../models/business-logic/entryDataValidation')
 
 
 exports.createAccount = (request, response) => {
 
    if (!request.body) return response.status(400).send({message: 'No data body received'})
 
-   if (!validator.isEmail(request.body.email)) return response.status(400).send({message: 'Incorrect email'})
+   const emailIsValidated = entryDataValidation.validateEmail(request.body.email)
+   const passwordIsValidated = entryDataValidation.validatePassword(request.body.password)
 
-   if (!validator.isLength(request.body.password, {min: 4, max: 16})) {
-      return response.status(400).send({message: 'Incorrect password length'})
-   }
-
-   if (!validator.isAlphanumeric(request.body.password, 'en-US', {ignore: '_'})) {
-      return response.status(400).send({message: 'Incorrect password syntax'})
-   }
+   if (emailIsValidated) return response.status(400).send({message: emailIsValidated})
+   if (passwordIsValidated) return response.status(400).send({message: passwordIsValidated})
 
    const email = request.body.email
    const password = Password.generateHashSync(request.body.password, 10)
@@ -68,13 +64,8 @@ exports.confirmAccount = (request, response) => {
 
    if (!confirmationCode) return response.status(400).send({message: 'No code received'})
 
-   if (!validator.isLength(confirmationCode, {min: 28, max: 28})) {
-      return response.status(400).send({message: 'Incorrect code length'})
-   }
-
-   if (!validator.isAlphanumeric(confirmationCode, 'en-US', {ignore: '-_'})) {
-      return response.status(400).send({message: 'Incorrect code syntax'})
-   }
+   const codeIsValidated = entryDataValidation.validateCode(confirmationCode)
+   if (codeIsValidated) return response.status(400).send({message: codeIsValidated})
 
    const cookies = new Cookies(request, response)
 
@@ -113,7 +104,8 @@ exports.sendPasswordRecoveryCode = (request, response) => {
 
    if (!email) return response.status(400).send({message: 'No data body received'})
 
-   if (!validator.isEmail(request.body.email)) return response.status(400).send({message: 'Incorrect email'})
+   const emailIsValidated = entryDataValidation.validateEmail(email)
+   if (emailIsValidated) return response.status(400).send({message: emailIsValidated})
 
    User.findOne({email: email})
    .then(result => {
@@ -142,21 +134,11 @@ exports.recoverPassword = (request, response) => {
       return response.status(400).send({message: 'No data body received'})
    }
 
-   if (!validator.isLength(request.body.code, {min: 28, max: 28})) {
-      return response.status(400).send({message: 'Incorrect code length'})
-   }
+   const codeIsValidated = entryDataValidation.validateCode(request.body.code)
+   const passwordIsValidated = entryDataValidation.validatePassword(request.body.password)
 
-   if (!validator.isAlphanumeric(request.body.code, 'en-US', {ignore: '-_'})) {
-      return response.status(400).send({message: 'Incorrect code syntax'})
-   }
-
-   if (!validator.isLength(request.body.password, {min: 4, max: 16})) {
-      return response.status(400).send({message: 'Incorrect password length'})
-   }
-
-   if (!validator.isAlphanumeric(request.body.password, 'en-US', {ignore: '_'})) {
-      return response.status(400).send({message: 'Incorrect password syntax'})
-   }
+   if (codeIsValidated) return response.status(400).send({message: codeIsValidated})
+   if (passwordIsValidated) return response.status(400).send({message: passwordIsValidated})
 
    const code = request.body.code
    const newPassword = Password.generateHashSync(request.body.password, 10)
@@ -190,15 +172,11 @@ exports.signin = (request, response) => {
    const email = request.body.email
    const password = request.body.password
 
-   if (!validator.isEmail(email)) return response.status(400).send({message: 'Incorrect email'})
+   const emailIsValidated = entryDataValidation.validateEmail(email)
+   const passwordIsValidated = entryDataValidation.validatePassword(password)
 
-   if (!validator.isLength(password, {min: 4, max: 16})) {
-      return response.status(400).send({message: 'Incorrect password length'})
-   }
-
-   if (!validator.isAlphanumeric(password, 'en-US', {ignore: '_'})) {
-      return response.status(400).send({message: 'Incorrect password syntax'})
-   }
+   if (emailIsValidated) return response.status(400).send({message: emailIsValidated})
+   if (passwordIsValidated) return response.status(400).send({message: passwordIsValidated})
 
    const SESSION_ID = token.generateToken(16)
 
@@ -284,20 +262,11 @@ exports.changePassword = (request, response) => {
 
    if (!oldPassword || !newPassword) return response.status(400).send({message: 'No data body received'})
 
-   if (!validator.isLength(oldPassword, {min: 4, max: 16})) {
-      return response.status(400).send({message: 'Incorrect current password length'})
-   }
+   const oldPasswordIsValidated = entryDataValidation.validatePassword(oldPassword)
+   const newPasswordIsValidated = entryDataValidation.validatePassword(newPassword)
 
-   if (!validator.isAlphanumeric(oldPassword, 'en-US', {ignore: '_'})) {
-      return response.status(400).send({message: 'Incorrect current password syntax'})
-   }
-   if (!validator.isLength(newPassword, {min: 4, max: 16})) {
-      return response.status(400).send({message: 'Incorrect new password length'})
-   }
-
-   if (!validator.isAlphanumeric(newPassword, 'en-US', {ignore: '_'})) {
-      return response.status(400).send({message: 'Incorrect new password syntax'})
-   }
+   if (oldPasswordIsValidated) return response.status(400).send({message: oldPasswordIsValidated})
+   if (newPasswordIsValidated) return response.status(400).send({message: newPasswordIsValidated})
 
 
    const cookies = new Cookies(request, response)
